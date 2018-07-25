@@ -1,11 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const bodyParser = require('body-parser')
-// const jsonParser = bodyParser.json()
-
-
-const { BlogPost } = require('./models')
+const { BlogPost, Author } = require('./models')
 router.use(express.json())
 
 router.get('/', (req, res) => {
@@ -25,7 +21,11 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   BlogPost
     .findById(req.params.id)
-    .then(blogPost => res.status(200).json(blogPost.serialize()))
+    .then(blogPost => {
+      // let output = blogPost.serialize(true)
+      // output.comments = blogPost.comments
+      res.status(200).json(blogPost.serialize('comments'))
+    })
     .catch(err => {
       console.error(err)
       res.status(500).json({message: 'Something went wrong on the Server'})
@@ -33,7 +33,7 @@ router.get('/:id', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-  const requiredFields = ['title', 'content', 'author']
+  const requiredFields = ['title', 'content', 'author_id']
   requiredFields.forEach(requirement => {
     if(!(requirement in req.body)){
       let message = `Oops you're missing the ${requirement}`
@@ -41,27 +41,27 @@ router.post('/', (req, res) => {
       return res.status(400).send(message)
     }
   })
-  const splitNameArray = req.body.author.split(' ')
-  if(!(splitNameArray[1])){
-    splitNameArray[1]=''
-  }
-  BlogPost.create({
-    title: req.body.title,
-    author: {
-      firstName: splitNameArray[0],
-      lastName:splitNameArray[1]
-    },
-    content:req.body.content
-  })
-    .then(blogPost => res.status(201).json(blogPost.serialize()))
-    .catch(err =>{
-      console.error(err)
-      res.status(500).json({message: 'Something went wrong on the Server'})
+  Author.findById(req.body.author_id)
+    .then(author => {
+      BlogPost.create({
+        title: req.body.title,
+        author: author._id,
+        content:req.body.content
+      })
+        .then(blogPost => res.status(201).json(blogPost.serialize('comments')))
+        .catch(err =>{
+          console.error(err)
+          res.status(500).json({message: 'Something went wrong on the Server'})
+        })
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(400).json({message: 'This author doesn\'t exist yet'})
     })
 })
 
 router.put('/:id', (req, res) => {
-  const requiredFields = ['title', 'content', 'author', 'id']
+  const requiredFields = ['title', 'content', 'id']
   if(!(req.params.id && req.body.id && req.params.id === req.body.id)){
     const message = `Your params and body id have to match`
     console.log(message)
@@ -76,7 +76,7 @@ router.put('/:id', (req, res) => {
   })
 
   const toUpdate = {};
-  const updatableFields = ['author', 'title', 'content']
+  const updatableFields = ['title', 'content']
 
   updatableFields.forEach(field => {
     if(field in req.body){
@@ -86,7 +86,7 @@ router.put('/:id', (req, res) => {
 
   BlogPost
     .findByIdAndUpdate(req.params.id, {$set: toUpdate})
-    .then(blogPost => res.status(200).json(blogPost))
+    .then(blogPost => res.status(200).json(blogPost.serialize('comments')))
     .catch(err => res.status(500).json({ message: 'Something went wrong on the server'}))
 })
 

@@ -1,77 +1,109 @@
-Requirements
-Create an API for a blogging app that has four endpoints:
+#Useful CL code
 
 mongoimport --db blogdb --collection blogPosts --drop --file .\seed-data.json
-
 mongoimport -h ds117848.mlab.com:17848 -d blogdb -c blogPosts -u clayton -p 1two34five! --file .\seed-data.json
 
---
-## GET /posts
-<!-- sends back all posts in the database.
-each post should be an object that looks like this:
+mongoimport --db blogdb --collection authors --file .\authors-seed-data.json --drop
+mongoimport --db blogdb --collection blogPosts --file .\blogposts-seed-data.json --drop
 
+---
+_Update the following endpoints in your blog app API from the previous challenge:_
+
+## GET /posts
+
+<!-- use a pre hook with the populate() method to make the output of all blog posts look the same as it did previously:
   {
       "title": "some title",
       "content": "a bunch of amazing words",
       "author": "Sarah Clarke",
       "created": "1481322758429"
   } -->
-<!-- GET /posts/:id sends back a single post with :id if it exists, using the schema described above. -->
 
---
-## POST /posts\
+##GET /posts/:id
 
-<!-- endpoint for creating new blog posts.
-expects request body to contain a JSON object like this:
+<!-- add an array of comments to the output of a single blog post so it looks like this:
+  {
+      "title": "some title",
+      "content": "a bunch of amazing words",
+      "author": "Sarah Clarke",
+      "created": "1481322758429",
+      "comments": [
+          { "content": "Here is a first comment." },
+          { "content": "Here is a second comment." },
+          { "content": "Here is a third comment." }
+      ]
+  } -->
+
+##POST /posts
+
+<!-- request body should now contain a JSON object like this:
 
   {
       "title": "some title",
       "content": "a bunch of amazing words",
-      "author": {
-          "firstName": "Sarah",
-          "lastName": "Clarke"
-      }
+      "author_id": "ObjectId(ajf9292kjf0)"
   }
-validates that the request body includes title, content, and author, and returns a 400 status and a helpful error message if one of these is missing.
-it should return the new post (using the same key/value pairs as the posts returned by GET /posts). -->
+in addition to validating that the request body includes title, content, and author_id, should check whether author_id exists as an _id in the authors collection and if not return a 400 status with a helpful error message.
+it should return the new post (using the same key/value pairs returned by GET /posts/:id). -->
+
+##PUT /posts/:id
+<!-- should only allow you to update the title and content.
+it should return a 200 status code with the updated object as follows:
+  {
+      "title": "some title",
+      "content": "a bunch of amazing words",
+      "author": "Sarah Clarke",
+      "created": "1481322758429"
+  } -->
 
 --
-## PUT /posts/:id
+Next, add endpoints to create, update, and delete authors:
 
-<!-- endpoint that allows you to update the title, content, and author fields.
-expects request body to contain a JSON object like this (note that this would only update the title — if you wanted to update content or author, you'd have to send those over too):
+##POST /authors
+
+<!-- create an author
+expects request body to contain a JSON object like this:
+
+  {
+      "firstName": "Sarah",
+      "lastName": "Clarke",
+      "userName": "sarah.clarke"
+  }
+validates that the request body includes firstName, lastName, and userName, and that the userName is not already taken by another author, then returns a 400 status and helpful error message in case of a problem.
+it should return the new author with the following key/value pairs:
+  {
+      "_id": "ajf9292kjf0"
+      "name": "Sarah Clarke"
+      "userName": "sarah.clarke"
+  } -->
+
+##PUT /authors/:id
+
+<!-- endpoint that allows you to update the firstName, lastName, and userName fields.
+expects request body to contain a JSON object like this (note that this would only update the userName — if you wanted to update firstName or lastName, you'd have to send those over too):
 
   {
       "id": "ajf9292kjf0",
-      "title": "New title"
+      "userName": "s.clarke"
   }
 the id property in the request body must be there.
 
 if the id in the URL path (/posts/:id) and the one in the request body don't match, it should return a 400 status code with a helpful error message.
-it should return the updated object, with a 200 status code. -->
-
---
-## DELETE /posts/:id
-
-<!-- allows you to delete a post with a given id.
-responds with a 204 status code, but no content. -->
-
-# Additional requirements:
-
-Internal server errors: if any of the endpoints fail because of an internal server error, they should log the error and return a 500 status code along with a message like "Internal server error".
-Seed data: Before you write a single line of code, download seed-data.json from this Gist. Then use mongoimport to seed your local database with some blog post data.
-Use Git/Github: As always, use Git/Github to save and backup your work as you go.
-Author in the db vs. the api: If you look at seed-data.json, you'll see that we seed our db with objects that look like this:
-
+if the new username is already taken by another author, it should return a 400 status code with a helpful error message.
+it should return a 200 status code with the updated object as follows:
   {
-      "title": "some title",
-      "content": "a bunch of amazing words",
-      "author": {
-          "firstName": "Sarah",
-          "lastName": "Clarke"
-      }
-  }
-This is also how the data should be stored in Mongo. However as previously described, the API does not return an object for the author property, but instead the author's first and last name separated by a space. Therefore, we recommend using an instance method like serialize from the restaurants app that you use to create the object the API should return. You might also consider creating a virtual property (perhaps called authorName) that returns the string value for author the API should return.
+      "_id": "ajf9292kjf0"
+      "name": "Sarah Clarke"
+      "userName": "s.clarke"
+  } -->
 
-Deploy to Heroku: Once your app is working, deploy it to Heroku. Note that you'll have to set up a db on mLab as described earlier in this lesson. Seed the mLab database with the data from seed-data.json.
+##DELETE /authors/:id
 
+allows you to delete an author with a given id.
+deletes any blog posts by that author.
+responds with a 204 status code, but no content.
+Note that when you delete an author, you must also delete their blog posts, otherwise their blog posts would reference an author that no longer exists.
+
+##Additional requirements:
+
+Deploy to Heroku: Once these updates to your app are working, deploy it to Heroku.
