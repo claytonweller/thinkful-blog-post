@@ -32,18 +32,13 @@ router.post('/', (req, res) => {
         res.status(400).json({message: req.body.userName + ' is already a user name'})
         return
       } 
-      
-      Author.create({
+      return Author.create({
         firstName:req.body.firstName,
         lastName:req.body.lastName,
         userName:req.body.userName
-      })
-      .then(author => res.status(201).json(author.serialize()))
-      .catch(err =>{
-        console.error(err)
-        res.status(500).json({message: 'something went awry on the server'})
-      })
+      })      
     })
+    .then(author => res.status(201).json(author.serialize()))
     .catch(err =>{
       console.error(err)
       res.status(500).json({message: 'something went awry on the server'})
@@ -66,22 +61,15 @@ router.put('/:id', (req, res) => {
 
   Author.findOne({userName: req.body.userName})
     .then(author => {
-      console.log(author)
       if(author){
         res.status(400).json({message: req.body.userName + ' is already a username'})
         return
       }
-      Author
-        .findByIdAndUpdate(req.params.id, {$set: toUpdate})
-        .then(() => {
-          Author.findOne({_id:req.body.id})
-            .then(author => res.status(200).json(author.serialize()))
-            .catch(err => res.status(500).json({message: 'Something went awry on the server'}))      
-        })
-        .catch(err => res.status(500).json({message: 'Something went awry on the server'}))
+      return Author.findByIdAndUpdate(req.params.id, {$set: toUpdate})
     })
+    .then(() => Author.findOne({_id:req.body.id}))      
+    .then(author => res.status(200).json(author.serialize()))
     .catch(err => res.status(500).json({message: 'Something went awry on the server'}))
-
 })
 
 router.delete('/:id', (req, res) => {

@@ -41,7 +41,7 @@ router.post('/', (req, res) => {
       return res.status(400).send(message)
     }
   })
-  Author.findById(req.body.author_id)
+  return Author.findById(req.body.author_id)
     .then(author => {
       BlogPost.create({
         title: req.body.title,

@@ -4,7 +4,10 @@ mongoimport --db blogdb --collection blogPosts --drop --file .\seed-data.json
 mongoimport -h ds117848.mlab.com:17848 -d blogdb -c blogPosts -u clayton -p 1two34five! --file .\seed-data.json
 
 mongoimport --db blogdb --collection authors --file .\authors-seed-data.json --drop
+mongoimport -h ds117848.mlab.com:17848 -d blogdb -c authors -u clayton -p 1two34five! --file .\authors-seed-data.json
+
 mongoimport --db blogdb --collection blogPosts --file .\blogposts-seed-data.json --drop
+mongoimport -h ds117848.mlab.com:17848 -d blogdb -c blogPosts -u clayton -p 1two34five! --file .\blogposts-seed-data.json
 
 ---
 _Update the following endpoints in your blog app API from the previous challenge:_
