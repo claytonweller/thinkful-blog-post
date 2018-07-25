@@ -11,17 +11,17 @@ _Update the following endpoints in your blog app API from the previous challenge
 
 ## GET /posts
 
-use a pre hook with the populate() method to make the output of all blog posts look the same as it did previously:
+<!-- use a pre hook with the populate() method to make the output of all blog posts look the same as it did previously:
   {
       "title": "some title",
       "content": "a bunch of amazing words",
       "author": "Sarah Clarke",
       "created": "1481322758429"
-  }
+  } -->
 
 ##GET /posts/:id
 
-add an array of comments to the output of a single blog post so it looks like this:
+<!-- add an array of comments to the output of a single blog post so it looks like this:
   {
       "title": "some title",
       "content": "a bunch of amazing words",
@@ -32,11 +32,11 @@ add an array of comments to the output of a single blog post so it looks like th
           { "content": "Here is a second comment." },
           { "content": "Here is a third comment." }
       ]
-  }
+  } -->
 
 ##POST /posts
 
-request body should now contain a JSON object like this:
+<!-- request body should now contain a JSON object like this:
 
   {
       "title": "some title",
@@ -44,21 +44,24 @@ request body should now contain a JSON object like this:
       "author_id": "ObjectId(ajf9292kjf0)"
   }
 in addition to validating that the request body includes title, content, and author_id, should check whether author_id exists as an _id in the authors collection and if not return a 400 status with a helpful error message.
-it should return the new post (using the same key/value pairs returned by GET /posts/:id).
-PUT /posts/:id
-should only allow you to update the title and content.
+it should return the new post (using the same key/value pairs returned by GET /posts/:id). -->
+
+##PUT /posts/:id
+<!-- should only allow you to update the title and content.
 it should return a 200 status code with the updated object as follows:
   {
       "title": "some title",
       "content": "a bunch of amazing words",
       "author": "Sarah Clarke",
       "created": "1481322758429"
-  }
+  } -->
+
+--
 Next, add endpoints to create, update, and delete authors:
 
 ##POST /authors
 
-create an author
+<!-- create an author
 expects request body to contain a JSON object like this:
 
   {
@@ -72,11 +75,11 @@ it should return the new author with the following key/value pairs:
       "_id": "ajf9292kjf0"
       "name": "Sarah Clarke"
       "userName": "sarah.clarke"
-  }
+  } -->
 
 ##PUT /authors/:id
 
-endpoint that allows you to update the firstName, lastName, and userName fields.
+<!-- endpoint that allows you to update the firstName, lastName, and userName fields.
 expects request body to contain a JSON object like this (note that this would only update the userName — if you wanted to update firstName or lastName, you'd have to send those over too):
 
   {
@@ -91,8 +94,8 @@ it should return a 200 status code with the updated object as follows:
   {
       "_id": "ajf9292kjf0"
       "name": "Sarah Clarke"
-      "userName": "sarah.clarke"
-  }
+      "userName": "s.clarke"
+  } -->
 
 ##DELETE /authors/:id
 

@@ -6,9 +6,11 @@ const mongoose = require('mongoose')
 const app = express()
 
 const blogPostRouter = require('./blogPostRouter')
+const authorRouter = require('./authorRouter')
 
 app.use(morgan('common'))
 app.use('/blog-posts', blogPostRouter)
+app.use('/authors', authorRouter)
 
 mongoose.Promise = global.Promise
 
