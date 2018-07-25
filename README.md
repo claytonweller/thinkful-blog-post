@@ -2,6 +2,9 @@ Requirements
 Create an API for a blogging app that has four endpoints:
 
 mongoimport --db blogdb --collection blogPosts --drop --file .\seed-data.json
+
+mongoimport -h ds117848.mlab.com:17848 -d blogdb -c blogPosts -u clayton -p 1two34five! --file .\seed-data.json
+
 --
 ## GET /posts
 <!-- sends back all posts in the database.
