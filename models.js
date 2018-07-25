@@ -1,5 +1,3 @@
-const uuid = require('uuid');
-
 const mongoose = require('mongoose')
 
 const blogPostSchema = mongoose.Schema({
