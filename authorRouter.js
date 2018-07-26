@@ -79,17 +79,13 @@ router.delete('/:id', (req, res) => {
   BlogPost.deleteMany({author: req.params.id})
     .then(() => {
       console.log('Deleted all blog posts associated with ' + req.params.id)
+      return Author.findByIdAndRemove(req.params.id)
+    })
+    .then(() => {
+      console.log('Deleted author ' + req.params.id)
       res.status(204).end()
     })
     .catch(err => res.status(500).json({message: 'Something went awry on the server'}))
- 
-  Author.findByIdAndRemove(req.params.id)
-  .then(() => {
-    console.log('Deleted author ' + req.params.id)
-    res.status(204).end()
-  })
-  .catch(err => res.status(500).json({message: 'Something went awry on the server'}))
-
 })
 
 module.exports = router
