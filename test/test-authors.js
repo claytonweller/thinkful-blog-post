@@ -154,7 +154,7 @@ describe('Authors', function() {
         .findOne()
         .then(function(_blogPost){
           blogPost = _blogPost
-          let id = blogPost.author_id
+          let id = blogPost.author._id
           return chai.request(app).delete(`/authors/${id}`).send({id:id})
         })
         .then(function(res){
