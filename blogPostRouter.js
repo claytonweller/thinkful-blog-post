@@ -33,7 +33,7 @@ router.get('/:id', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-  const requiredFields = ['title', 'content', 'author_id']
+  const requiredFields = ['title', 'content', 'author']
   requiredFields.forEach(requirement => {
     if(!(requirement in req.body)){
       let message = `Oops you're missing the ${requirement}`
@@ -41,7 +41,7 @@ router.post('/', (req, res) => {
       return res.status(400).send(message)
     }
   })
-  return Author.findById(req.body.author_id)
+  return Author.findById(req.body.author)
     .then(author => {
       BlogPost.create({
         title: req.body.title,

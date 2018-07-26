@@ -43,6 +43,11 @@ blogPostSchema.pre('find', function(next) {
   next();
 });
 
+blogPostSchema.pre('findById', function(next) {
+  this.populate('author');
+  next();
+});
+
 blogPostSchema.virtual('fullName').get(function() {
   return nameSorter(this.author)
 })
