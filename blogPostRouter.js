@@ -48,7 +48,7 @@ router.post('/', (req, res) => {
         author: author._id,
         content:req.body.content
       })
-        .then(blogPost => res.status(201).json(blogPost.serialize('comments')))
+        .then(blogPost => res.status(201).json(blogPost.serialize('comments'))) 
         .catch(err =>{
           console.error(err)
           res.status(500).json({message: 'Something went wrong on the Server'})
@@ -86,7 +86,8 @@ router.put('/:id', (req, res) => {
 
   BlogPost
     .findByIdAndUpdate(req.params.id, {$set: toUpdate})
-    .then(blogPost => res.status(200).json(blogPost.serialize('comments')))
+    .then(blogPost => BlogPost.findById(blogPost._id))
+    .then(updatedBlogPost => res.status(200).json(updatedBlogPost.serialize('comments')))
     .catch(err => res.status(500).json({ message: 'Something went wrong on the server'}))
 })
 

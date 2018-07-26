@@ -19,8 +19,10 @@ const nameSorter = function (name){
     return `${name.firstName} ${name.lastName}`
   } else if (name.firstName){
     return name.firstName
-  } else {
+  } else if(name.userName) {
     return name.userName
+  } else {
+    return name
   }
 }
 

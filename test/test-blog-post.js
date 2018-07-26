@@ -92,91 +92,71 @@ describe('Blog Posts', function() {
             .send(newBlogPost)
         })
         .then(function(res) {
-          console.log(res.body)
           expect(res).to.have.status(201)
           expect(res).to.be.json
           expect(res.body).to.a('object')
           expect(res.body).to.include.keys('id', 'title', 'content', 'comments', 'author')
           expect(res.body.id).to.not.be.null
-          expect(res.body.name).to.equal(`${newBlogPost.firstName} ${newBlogPost.lastName}`)
-          expect(res.body.userName).to.equal(newBlogPost.userName)
-          return BlogPost.findById(res.body._id)
+          expect(res.body.title).to.equal(newBlogPost.title)
+          expect(res.body.content).to.equal(newBlogPost.content)
+          expect(res.body.author).to.equal(newBlogPost.author)
+          return BlogPost.findById(res.body.id)
         })
         .then(function(blogPost){
-          console.log(blogPost)
-          // expect(blogPost.firstName).to.equal(newBlogPost.firstName)
-          // expect(blogPost.lastName).to.equal(newBlogPost.lastName)
-          // expect(blogPost.userName).to.equal(newBlogPost.userName)
+          expect(blogPost.title).to.equal(newBlogPost.title)
+          expect(blogPost.content).to.equal(newBlogPost.content)
         })
     })
   })
 
   //end POST tests
 
-// //Begin PUT tests
-//   describe('PUT endpoint', function(){
-//     it('should update fiels you send over', function() {
-//       const updateData= {
-//         firstName: 'UPDATED!',
-//         lastName:'sa;lfdkja;lkne;klfn;asdlkv;asljrlwna;flkkds;vouas;dlkjf'
-//       }
-//       return Author
-//         .findOne()
-//         .then(function(author){
-//           updateData['id'] = author._id
-//           return chai.request(app)
-//             .put(`/blog-posts/${updateData.id}`)
-//             .send(updateData)
-//         })
-//         .then(function(res){
-//           expect(res).to.have.status(200)
-//           expect(res).to.be.json
-//           expect(res.body).to.be.a('object')
-//           const expectedKeys = ['_id', 'name', 'userName']
-//           expect(res.body).to.include.keys(expectedKeys) 
-//           expect(res.body.name).to.equal(`${updateData.firstName} ${updateData.lastName}`)
-//         })
-//     })
-//   })
-//   //end PUT
+//Begin PUT tests
+  describe('PUT endpoint', function(){
+    it('should update fiels you send over', function() {
+      const updateData= {
+        title: 'UPDATED!',
+        content:'sa;lfdkja;lkne;klfn;asdlkv;asljrlwna;flkkds;vouas;dlkjf'
+      }
+      return BlogPost
+        .findOne()
+        .then(function(blogPost){
+          updateData['id'] = blogPost._id
+          return chai.request(app)
+            .put(`/blog-posts/${updateData.id}`)
+            .send(updateData)
+        })
+        .then(function(res){
+          expect(res).to.have.status(200)
+          expect(res).to.be.json
+          expect(res.body).to.be.a('object')
+          const expectedKeys = ['id', 'author', 'title', 'comments', 'content']
+          expect(res.body).to.include.keys(expectedKeys) 
+          expect(res.body.title).to.equal(updateData.title)
+          expect(res.body.content).to.equal(updateData.content)
+        })
+    })
+  })
+  //end PUT
 
-// //Begin DELETE tests
-//   describe('DELETE endpoint', function(){
-//     it('should delete the author', function(){
-//       let author
-//       return Author
-//         .findOne()
-//         .then(function(_author){
-//           author = _author
-//           return chai.request(app).delete(`/blog-posts/${author._id}`).send({id:author._id})
-//         })
-//         .then(function(res){
-//           expect(res).to.have.status(204)
-//           return Author.findById(author._id)
-//         })
-//         .then(function(_author){
-//           expect(_author).to.be.null
-//         })
-//     })
+//Begin DELETE tests
+  describe('DELETE endpoint', function(){
+    it('should delete the Blog Post', function(){
+      let blogPost
+      return BlogPost
+        .findOne()
+        .then(function(_blogPost){
+          blogPost = _blogPost
+          return chai.request(app).delete(`/blog-posts/${blogPost._id}`).send({id:blogPost._id})
+        })
+        .then(function(res){
+          expect(res).to.have.status(204)
+          return BlogPost.findById(blogPost._id)
+        })
+        .then(function(_blogPost){
+          expect(_blogPost).to.be.null
+        })
+    }) 
 
-//     it('should delete all blog posts made by that author', function(){
-//       let blogPost;
-//       return BlogPost
-//         .findOne()
-//         .then(function(_blogPost){
-//           blogPost = _blogPost
-//           let id = blogPost.author._id
-//           return chai.request(app).delete(`/blog-posts/${id}`).send({id:id})
-//         })
-//         .then(function(res){
-//           expect(res).to.have.status(204)
-//           return BlogPost.findById(blogPost._id)
-//         })
-//         .then(function(res) {
-//           expect(res).to.be.null
-//         })
-    
-//     })  
-
-//   })
+  })
 })
