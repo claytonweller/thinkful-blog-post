@@ -28,6 +28,8 @@ const nameSorter = function (name){
 
 const commentSchema = mongoose.Schema({content:String})
 
+///Models folder separate models into js
+
 const blogPostSchema = mongoose.Schema({
   title:{type: String, required:true},
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'Author' },

@@ -22,8 +22,6 @@ router.get('/:id', (req, res) => {
   BlogPost
     .findById(req.params.id)
     .then(blogPost => {
-      // let output = blogPost.serialize(true)
-      // output.comments = blogPost.comments
       res.status(200).json(blogPost.serialize('comments'))
     })
     .catch(err => {
@@ -43,20 +41,19 @@ router.post('/', (req, res) => {
   })
   return Author.findById(req.body.author)
     .then(author => {
-      BlogPost.create({
+      return BlogPost.create({
         title: req.body.title,
         author: author._id,
         content:req.body.content
       })
-        .then(blogPost => res.status(201).json(blogPost.serialize('comments'))) 
-        .catch(err =>{
-          console.error(err)
-          res.status(500).json({message: 'Something went wrong on the Server'})
-        })
     })
+    .then(blogPost => res.status(201).json(blogPost.serialize('comments')))
     .catch(err => {
+      //evaluate And send appropriate response
+
       console.log(err)
-      res.status(400).json({message: 'This author doesn\'t exist yet'})
+      // res.status(400).json({message: 'This author doesn\'t exist yet'})
+      // res.status(500).json({message: 'Something went wrong on the Server'})
     })
 })
 
