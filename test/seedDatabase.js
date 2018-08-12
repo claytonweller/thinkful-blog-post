@@ -17,6 +17,15 @@ function seedDatabase() {
   })
 }
 
+function tearDownDb() {
+  return new Promise((resolve, reject) => {
+    console.warn('Deleting test database')
+    mongoose.connection.dropDatabase()
+      .then(result => resolve(result))
+      .catch(err => reject(err))
+  })
+}
+
 // AUTHOR SEED
 
 function seedAuthorData() {
@@ -33,20 +42,13 @@ function seedAuthorData() {
 
 function generateAuthorData() {
   return {
-    firstName: faker.name.lastName(),
+    firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
     userName: faker.internet.userName(),
   }
 }
 
-function tearDownDb() {
-  return new Promise((resolve, reject) => {
-    console.warn('Deleting test database')
-    mongoose.connection.dropDatabase()
-      .then(result => resolve(result))
-      .catch(err => reject(err))
-  })
-}
+
 
 //BLOG POST SEED
 

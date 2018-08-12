@@ -18,9 +18,9 @@ const {PORT, DATABASE_URL} = require('./config')
 
 let server;
 
-function runServer(databseUrl, port=PORT) {
+function runServer(databaseUrl, port=PORT) {
   return new Promise((resolve, reject) => {
-    mongoose.connect(databseUrl, {useNewUrlParser: true}, err =>{
+    mongoose.connect(databaseUrl, {useNewUrlParser: true}, err =>{
       if (err) {
         return reject(err)
       }

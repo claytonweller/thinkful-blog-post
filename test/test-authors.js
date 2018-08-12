@@ -154,8 +154,8 @@ describe('Authors', function() {
         .findOne()
         .then(function(_blogPost){
           blogPost = _blogPost
-          let id = blogPost.author._id
-          return chai.request(app).delete(`/authors/${id}`).send({id:id})
+          let authorId = blogPost.author._id
+          return chai.request(app).delete(`/authors/${authorId}`).send({id:authorId})
         })
         .then(function(res){
           expect(res).to.have.status(204)
